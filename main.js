@@ -15,12 +15,13 @@
  * To make the second one happen, the number to change
  * is the first argument to `repeat`, currently set at 10.
  */
-const gridWidth = 10;
+let darkMode = false;
+const gridWidth = 75;
 let count = 0;
 while (count <= gridWidth * gridWidth) {
   const canvas = document.querySelector('.canvas');
   const div = document.createElement('div');
-  div.className = 'square color-5';
+  div.className = 'square color-9';
   canvas.appendChild(div);
   count++;
 }
@@ -49,7 +50,38 @@ while (count <= gridWidth * gridWidth) {
 // Add queries for all your squares, palette colors, and brush here.
 // (Note the singular or plural used in that sentence!)
 
+const blocks = document.querySelectorAll('.square');
+const colors = document.querySelectorAll('.palette .palette-color');
+const brush = document.querySelector('.brush-icon');
+const body = document.querySelector('body');
+const canvas = document.querySelector('.canvas');
+const dark = document.querySelector('.dark-mode');
+const darkText = document.querySelector('button.dark-mode');
+const app = document.querySelector('.app');
+const clear = document.querySelector('.clear');
+const squares = document.querySelectorAll('.square');
 
+dark.addEventListener('click', function(){
+  if(darkMode == false){
+    app.className = 'app darkmode'
+    body.style.background = 'rgb(37, 37, 48)'
+    body.style.color = 'white'
+    darkText.innerText = 'Lightmode'
+    dark.style.background = 'rgb(224, 236, 255)'
+    darkText.style.color = 'black'
+
+  }
+  else{
+    app.className = 'app'
+    body.style.color = defaultStatus
+    body.style.background = defaultStatus
+    darkText.innerText = 'Darkmode'
+    dark.style.background = 'rgb(23, 38, 61)'
+    darkText.style.color = 'white'
+  }
+  darkMode = !darkMode
+  console.log('darkmode', darkMode)
+})
 
 /****************************
  * EVENT LISTENER FUNCTIONS *
@@ -61,6 +93,47 @@ while (count <= gridWidth * gridWidth) {
 // run as event listeners (after the next step is set up) isn't a
 // bad idea for testing purposes.
 
+let clicked = false
+let colorPicked = 'color-9'
+brush.className = `icon palette-icon ${colorPicked}`
+
+colors.forEach(function(color){
+  color.addEventListener('click', function(){
+    const classArr = color.className.split(' ')
+    colorPicked = classArr[classArr.length-1]
+    console.log(colorPicked)
+    brush.className = `icon palette-icon ${colorPicked}`
+  })
+})
+
+body.addEventListener('mouseup', function(){
+  clicked = false
+  console.log(clicked)
+})
+
+blocks.forEach(function(square){
+    square.addEventListener('mousedown', function(){
+      clicked = true
+      square.className = `square ${colorPicked}`
+      console.log(clicked)
+    })
+    square.addEventListener('mouseup', function(){
+      clicked = false
+      console.log(clicked)
+    })
+    // clicked = false
+    square.addEventListener('mouseover', function(){
+      if(clicked === true){
+        square.className = `square ${colorPicked}`
+      }
+    })
+})
+
+clear.addEventListener('click', function(){
+    squares.forEach(function(square){
+        square.className = 'square color-9'
+    })
+})
 
 
 /**************************
